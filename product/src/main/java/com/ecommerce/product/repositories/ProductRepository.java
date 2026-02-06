@@ -13,8 +13,13 @@ import com.ecommerce.product.models.Product;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findByActiveTrue();
-
-    @Query("SELECT p FROM products WHERE p.active = true AND p.stockQuantity > 0 AND LOWER(p.name) LIKE LOWER(CONCAT('%', :keyword, '%'))")
+    @Query("""
+        SELECT p
+        FROM Product p
+        WHERE p.active = true
+        AND p.stockQuantity > 0
+        AND LOWER(p.name) LIKE LOWER(CONCAT('%', :keyword, '%'))
+    """)
     List<Product> searchProducts(@Param("keyword") String keyword);
 
     Optional<Product> findByIdAndActiveTrue(Long id);
