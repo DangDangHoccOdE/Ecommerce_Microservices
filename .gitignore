@@ -5,10 +5,15 @@
 # VSCode
 .vscode/
 
-# Maven
-target/
+# ===== Secrets =====
+.env
+*.env
+*.jks
+*.key
+*.pem
 
-# logs
+# ===== Build =====
+target/
 *.log
 
 # OS
