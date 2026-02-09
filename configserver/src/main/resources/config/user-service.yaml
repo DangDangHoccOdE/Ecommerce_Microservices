@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: user-service
+  mongodb:
+    uri: ${DB_URL}
+    database: ${DB_NAME}
+  rabbitmq:
+    host: ${RABBITMQ_HOST}
+    port: ${RABBITMQ_PORT}
+    username: ${RABBITMQ_USER}
+    password: ${RABBITMQ_PASSWORD}
+
+server:
+  port: 8082
+
+management:
+    endpoints:
+        web:
+            exposure:
+                include: "*"

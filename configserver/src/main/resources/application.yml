@@ -1,49 +1,23 @@
 spring:
-  application:
-    name: config-server
-  profiles:
-    active: native # Sử dụng cấu hình local
-  cloud:
-    config:
-      server:
-        native:
-          search-locations: file:///D:/Ecommerce_Microservices/configserver/src/main/resources/config
-          # Dùng file thì sẽ tự load thay vì classpath
-  rabbitmq:
-    host: localhost
-    port: 5672
-    username: guest
-    password: guest
-  # cloud:
-  #   config:
-  #     server:
-  #       git:
-  #         uri: https://github.com/DangDangHoccOdE/app-configuration
-  #         username: ${GIT_USER}
-  #         password: ${GIT_TOKEN}
-
-logging:
-  level:
-    org.springframework.amqp: DEBUG
-    org.springframework.cloud.bus: DEBUG
+    application:
+        name: configserver
+    profiles:
+        active: native
+    rabbitmq:
+        host: ${RABBITMQ_HOST}
+        port: ${RABBITMQ_PORT}
+        username: ${RABBITMQ_USER}
+        password: ${RABBITMQ_PASSWORD}
+    cloud:
+        config:
+            server:
+                native:
+                    search-locations: file:///D:\Ecommerce_Microservices\configserver\src\main\resources\config
+server:
+    port: 8888
 
 management:
-  endpoints:
-    web:
-      exposure:
-        include: "*"
-
-server:
-  port: 8888
-
-# Encryption key for sensitive properties
-# B1: Tạo keystore: & "C:\Program Files\Java\jdk-21\bin\keytool.exe" -genkeypair -alias configkey -keyalg RSA -storetype JKS -dname "CN=Config Server" -keypass 123456 -keystore config-server.jks -storepass 123456
-
-# B2: Move file config-server.jks to src/main/resources/
-# B3: Cấu hình như bên dưới
-encrypt:
-  key-store:
-    location: classpath:config-server.jks
-    password: 123456
-    alias: configkey
-    secret: 123456
+    endpoints:
+        web:
+            exposure:
+                include: "*"

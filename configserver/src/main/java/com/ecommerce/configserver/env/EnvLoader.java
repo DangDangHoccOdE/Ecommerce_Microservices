@@ -1,4 +1,4 @@
-package com.config.configserver;
+package com.ecommerce.configserver.env;
 
 import io.github.cdimascio.dotenv.Dotenv;
 import org.springframework.context.ApplicationContextInitializer;
