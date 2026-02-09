@@ -1,0 +1,14 @@
+build:
+  id: 101
+  version: 1.2.3
+  name: "Native Default-Build"
+  type: "Native Default Build"
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh
+
+server:
+  port: 8000
