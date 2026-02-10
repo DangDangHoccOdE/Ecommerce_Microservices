@@ -6,7 +6,7 @@
 
 // import com.ecommerce.order.dtos.response.ProductResponse;
 
-// @HttpExchange
+// @HttpExchange("http://product-service")
 // public interface ProductServiceClient {
 
 //     @GetExchange("/api/products/{id}")

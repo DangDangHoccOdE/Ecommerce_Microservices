@@ -3,11 +3,14 @@ package com.ecommerce.order.services;
 import java.math.BigDecimal;
 import java.util.List;
 
+import org.h2.engine.User;
 import org.springframework.stereotype.Service;
 
 import com.ecommerce.order.clients.ProductServiceClient;
+import com.ecommerce.order.clients.UserServiceClient;
 import com.ecommerce.order.dtos.request.CartItemRequest;
 import com.ecommerce.order.dtos.response.ProductResponse;
+import com.ecommerce.order.dtos.response.UserResponse;
 import com.ecommerce.order.models.CartItem;
 import com.ecommerce.order.repositories.CartItemRepository;
 
@@ -20,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 public class CartService {
     private final CartItemRepository cartItemRepository;
     private final ProductServiceClient productServiceClient;
+    private final UserServiceClient userServiceClient;
 
     public boolean addToCart(String userId, CartItemRequest request) {
         ProductResponse productResponse = productServiceClient.getProductDetails(request.getProductId());
@@ -28,6 +32,11 @@ public class CartService {
         }
         
         if (productResponse.getStockQuantity() < request.getQuantity()) {
+            return false;
+        }
+
+        UserResponse userResponse = userServiceClient.getUserDetails(userId);
+        if (userResponse == null) {
             return false;
         }
 
