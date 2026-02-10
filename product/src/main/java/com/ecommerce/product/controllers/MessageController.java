@@ -5,16 +5,15 @@ import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
 @RestController
 @RefreshScope
 public class MessageController {
-    @Value("${app.message}")
-    private String message;
+    // @Value("${app.message}")
+    // private String message;
 
     @GetMapping("/message")
     public String getMessaage() {
-        return message;
+        return "Hello from Product Service";
     }
-    
+
 }

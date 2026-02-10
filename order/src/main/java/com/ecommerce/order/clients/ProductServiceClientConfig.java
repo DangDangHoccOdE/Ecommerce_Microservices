@@ -11,18 +11,18 @@
 
 // @Configuration
 // public class ProductServiceClientConfig {
-//     @Bean
-//     public ProductServiceClient productServiceClientConfig(RestClient.Builder restClientBuilder) {
-//         RestClient restClient = restClientBuilder
-//                             .baseUrl("http://product-service")
-//                             .defaultStatusHandler(HttpStatusCode::is4xxClientError,
-//                                         ((request, response) -> Optional.empty()))
-//                             .build();
-//         RestClientAdapter adapter = RestClientAdapter.create(restClient);
-//         HttpServiceProxyFactory factory = HttpServiceProxyFactory
-//                                             .builderFor(adapter)
-//                                             .build();
-//         return factory.createClient(ProductServiceClient.class);
-//     }
+// @Bean
+// public ProductServiceClient productServiceClientInterface(RestClient.Builder
+// restClientBuilder) {
+// RestClient restClient = restClientBuilder
+// .baseUrl("http://product-service")
+// .defaultStatusHandler(HttpStatusCode::is4xxClientError,
+// ((request, response) -> Optional.empty()))
+// .build();
+// RestClientAdapter adapter = RestClientAdapter.create(restClient);
+// HttpServiceProxyFactory factory = HttpServiceProxyFactory
+// .builderFor(adapter)
+// .build();
+// return factory.createClient(ProductServiceClient.class);
 // }
-
+// }

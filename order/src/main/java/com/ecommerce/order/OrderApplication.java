@@ -15,8 +15,8 @@ public class OrderApplication {
 	public static void main(String[] args) {
 		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Ho_Chi_Minh"));
 		new SpringApplicationBuilder(OrderApplication.class)
-			.initializers(new EnvLoader())
-			.run(args);
+				.initializers(new EnvLoader())
+				.run(args);
 	}
 
 }

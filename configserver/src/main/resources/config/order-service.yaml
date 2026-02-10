@@ -1,33 +1,52 @@
+# spring:
+#     application:
+#         name: order-service
+#     datasource:
+#         url: ${DB_URL}
+#         username: ${DB_USER}
+#         password: ${DB_PASSWORD}
+#     jpa:
+#         database: POSTGRESQL
+#         hibernate:
+#             ddl-auto: update
+#         show-sql: true
+#         database-platform: org.hibernate.dialect.PostgreSQLDialect
+#     rabbitmq:
+#         host: ${RABBITMQ_HOST}
+#         port: ${RABBITMQ_PORT}
+#         username: ${RABBITMQ_USER}
+#         password: ${RABBITMQ_PASSWORD}
+
 spring:
-    application:
-        name: order-service
-    datasource:
-        url: ${DB_URL}
-        username: ${DB_USER}
-        password: ${DB_PASSWORD}
-    jpa:
-        database: POSTGRESQL
-        hibernate:
-            ddl-auto: update
-        show-sql: true
-        database-platform: org.hibernate.dialect.PostgreSQLDialect
-    rabbitmq:
-        host: ${RABBITMQ_HOST}
-        port: ${RABBITMQ_PORT}
-        username: ${RABBITMQ_USER}
-        password: ${RABBITMQ_PASSWORD}
+  application:
+    name: order-service
+  datasource:
+    url: jdbc:postgresql://localhost:5432/order
+    username: postgres
+    password: postgres
+  jpa:
+    database: POSTGRESQL
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
 
 server:
-    port: 8083
+  port: 8083
 
 management:
-    endpoints:
-        web:
-            exposure:
-                include: "*"
+  endpoints:
+    web:
+      exposure:
+        include: "*"
 
 app:
-    message: "Hello Order Service"
+  message: "Hello Order Service"
 
 eureka:
   client:
@@ -35,4 +54,14 @@ eureka:
       defaultZone: http://localhost:8761/eureka/
     register-with-eureka: true
     fetch-registry: true
-    
+
+logging:
+  level:
+    root: INFO
+    com.ecommerce.order: TRACE
+  file:
+    name: logs/${spring.application.name}.log
+  logback:
+    rollingpolicy:
+      max-file-size: 5MB
+      max-history: 7 # 7 days of logs

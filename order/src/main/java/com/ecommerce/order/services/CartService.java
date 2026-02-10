@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.ecommerce.order.clients.ProductServiceClient;
 import com.ecommerce.order.clients.UserServiceClient;
+// import com.ecommerce.order.clients.UserServiceClient;
 import com.ecommerce.order.dtos.request.CartItemRequest;
 import com.ecommerce.order.dtos.response.ProductResponse;
 import com.ecommerce.order.dtos.response.UserResponse;
@@ -30,7 +31,7 @@ public class CartService {
         if (productResponse == null) {
             return false;
         }
-        
+
         if (productResponse.getStockQuantity() < request.getQuantity()) {
             return false;
         }
@@ -68,7 +69,7 @@ public class CartService {
     public boolean deleteItemFromCart(String userId, String productId) {
         CartItem cartItem = cartItemRepository.findByUserIdAndProductId(userId, productId);
 
-        if (cartItem != null){
+        if (cartItem != null) {
             cartItemRepository.delete(cartItem);
             return true;
         }
@@ -76,8 +77,8 @@ public class CartService {
     }
 
     public boolean addToCartFallBack(String userId,
-                                     CartItemRequest request,
-                                     Exception exception) {
+            CartItemRequest request,
+            Exception exception) {
         exception.printStackTrace();
         return false;
     }
