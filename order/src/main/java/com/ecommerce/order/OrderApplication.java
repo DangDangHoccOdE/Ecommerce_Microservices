@@ -4,10 +4,12 @@ import java.util.TimeZone;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 
 import com.ecommerce.order.env.EnvLoader;
 
 @SpringBootApplication
+@EnableFeignClients
 public class OrderApplication {
 
 	public static void main(String[] args) {

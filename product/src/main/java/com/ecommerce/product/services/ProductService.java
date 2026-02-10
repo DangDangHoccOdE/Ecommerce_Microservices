@@ -45,6 +45,7 @@ public class ProductService {
         product.setPrice(productRequest.getPrice());
         product.setImageUrl(productRequest.getImageUrl());
         product.setStockQuantity(productRequest.getStockQuantity());
+        product.setActive(productRequest.getActive());
     }
 
     public Optional<ProductResponse> updateProduct(Long id, ProductRequest productRequest) {

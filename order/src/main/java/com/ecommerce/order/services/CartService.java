@@ -1,10 +1,13 @@
 package com.ecommerce.order.services;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.ecommerce.order.clients.ProductServiceClient;
 import com.ecommerce.order.dtos.request.CartItemRequest;
+import com.ecommerce.order.dtos.response.ProductResponse;
 import com.ecommerce.order.models.CartItem;
 import com.ecommerce.order.repositories.CartItemRepository;
 
@@ -16,8 +19,32 @@ import lombok.RequiredArgsConstructor;
 @Transactional
 public class CartService {
     private final CartItemRepository cartItemRepository;
+    private final ProductServiceClient productServiceClient;
 
     public boolean addToCart(String userId, CartItemRequest request) {
+        ProductResponse productResponse = productServiceClient.getProductDetails(request.getProductId());
+        if (productResponse == null) {
+            return false;
+        }
+        
+        if (productResponse.getStockQuantity() < request.getQuantity()) {
+            return false;
+        }
+
+        CartItem existingCartItem = cartItemRepository.findByUserIdAndProductId(userId, request.getProductId());
+
+        if (existingCartItem != null) {
+            existingCartItem.setQuantity(existingCartItem.getQuantity() + request.getQuantity());
+            existingCartItem.setPrice(BigDecimal.valueOf(1000.00));
+            cartItemRepository.save(existingCartItem);
+        } else {
+            CartItem cartItem = new CartItem();
+            cartItem.setUserId(userId);
+            cartItem.setProductId(request.getProductId());
+            cartItem.setQuantity(request.getQuantity());
+            cartItem.setPrice(BigDecimal.valueOf(1000.00));
+            cartItemRepository.save(cartItem);
+        }
         return true;
     }
 
