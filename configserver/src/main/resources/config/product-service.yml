@@ -1,10 +1,31 @@
+# spring:
+#   application:
+#     name: product-service
+#   datasource:
+#     url: ${DB_URL}
+#     username: ${DB_USER}
+#     password: ${DB_PASSWORD}
+#   jpa:
+#     database: POSTGRESQL
+#     hibernate:
+#       ddl-auto: update
+#     show-sql: true
+#     database-platform: org.hibernate.dialect.PostgreSQLDialect
+#   rabbitmq:
+#     host: ${RABBITMQ_HOST}
+#     port: ${RABBITMQ_PORT}
+#     username: ${RABBITMQ_USER}
+#     password: ${RABBITMQ_PASSWORD}
+#   jmx:
+#     enabled: false
+
 spring:
   application:
     name: product-service
   datasource:
-    url: ${DB_URL}
-    username: ${DB_USER}
-    password: ${DB_PASSWORD}
+    url: jdbc:postgresql://localhost:5432/product
+    username: postgres
+    password: postgres
   jpa:
     database: POSTGRESQL
     hibernate:
@@ -12,10 +33,12 @@ spring:
     show-sql: true
     database-platform: org.hibernate.dialect.PostgreSQLDialect
   rabbitmq:
-    host: ${RABBITMQ_HOST}
-    port: ${RABBITMQ_PORT}
-    username: ${RABBITMQ_USER}
-    password: ${RABBITMQ_PASSWORD}
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+  jmx:
+    enabled: false
 
 server:
   port: 8081
@@ -25,6 +48,23 @@ management:
     web:
       exposure:
         include: "*"
+
+  endpoint:
+    prometheus:
+      enabled: true
+    
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+
+  tracing:
+    sampling:
+      probability: 1.0
+
+  zipkin:
+    tracing:
+      endpoint: http://localhost:9411/api/v2/spans
 
 # app:
 #   message: "Hello product Service"
