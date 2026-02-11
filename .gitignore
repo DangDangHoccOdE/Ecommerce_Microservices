@@ -19,3 +19,9 @@ target/
 # OS
 .DS_Store
 Thumbs.db
+
+# MinIO data
+additional/evaluate-prometheus/.data/
+
+# General docker volumes
+.data/
