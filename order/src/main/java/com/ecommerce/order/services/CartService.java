@@ -14,6 +14,8 @@ import com.ecommerce.order.dtos.response.ProductResponse;
 import com.ecommerce.order.dtos.response.UserResponse;
 import com.ecommerce.order.models.CartItem;
 import com.ecommerce.order.repositories.CartItemRepository;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.retry.annotation.Retry;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +28,9 @@ public class CartService {
     private final ProductServiceClient productServiceClient;
     private final UserServiceClient userServiceClient;
 
+    // @CircuitBreaker(name = "productService", fallbackMethod =
+    // "addToCartFallBack")
+    @Retry(name = "retryBreaker", fallbackMethod = "addToCartFallBack")
     public boolean addToCart(String userId, CartItemRequest request) {
         ProductResponse productResponse = productServiceClient.getProductDetails(request.getProductId());
         if (productResponse == null) {
