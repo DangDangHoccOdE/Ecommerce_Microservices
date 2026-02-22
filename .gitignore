@@ -25,3 +25,8 @@ additional/evaluate-prometheus/.data/
 
 # General docker volumes
 .data/
+
+# Logs
+logs/
+*.log
+*.gz
