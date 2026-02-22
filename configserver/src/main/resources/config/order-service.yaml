@@ -62,6 +62,12 @@ management:
   zipkin:
     tracing:
       endpoint: http://localhost:9411/api/v2/spans
+  endpoint:
+    health:
+      show-details: always
+  health:
+    circuitbreakers:
+      enabled: true
 
 app:
   message: "Hello Order Service"
@@ -83,3 +89,22 @@ logging:
     rollingpolicy:
       max-file-size: 5MB
       max-history: 7 # 7 days of logs
+
+# Circuit Breaker
+resilience4j:
+  circuitbreaker:
+    instances:
+      productService:
+        registerHealthIndicator: true
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+        permittedNumberOfCallsInHalfOpenState: 3
+        waitDurationInOpenState: 10s
+        failureRateThreshold: 50
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+        slidingWindowType: count_based
+  retry:
+    instances:
+      retryBreaker:
+        maxAttempts: 5
+        waitDuration: 5s
