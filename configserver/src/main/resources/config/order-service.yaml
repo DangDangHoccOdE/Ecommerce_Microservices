@@ -41,6 +41,15 @@ spring:
 server:
   port: 8083
 
+# config for RabbitMQ
+rabbitmq:
+  exchange:
+    name: order.exchange
+  queue:
+    name: order.queue
+  routing:
+    key: order.tracking
+  
 management:
   endpoints:
     web:

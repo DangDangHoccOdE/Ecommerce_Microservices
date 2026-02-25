@@ -2,11 +2,15 @@ package com.ecommerce.order.services;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.ecommerce.order.dtos.response.OrderCreatedEvent;
 import com.ecommerce.order.dtos.response.OrderItemDTO;
 import com.ecommerce.order.dtos.response.OrderResponse;
 import com.ecommerce.order.models.CartItem;
@@ -22,6 +26,13 @@ import lombok.RequiredArgsConstructor;
 public class OrderService {
     private final OrderRepository orderRepository;
     private final CartService cartService;
+    private final RabbitTemplate rabbitTemplate;
+
+    @Value("${rabbitmq.routing.key}")
+    public String routingKey;
+
+    @Value("${rabbitmq.exchange.name}")
+    public String exchangeName;
 
     public Optional<OrderResponse> createOrder(String userId) {
         List<CartItem> cartItems = cartService.getCart(userId);
@@ -54,6 +65,20 @@ public class OrderService {
 
         // clear the cart
         cartService.clearCart(userId);
+
+        // Publish order created event to RabbitMQ
+        OrderCreatedEvent event = new OrderCreatedEvent(
+            savedOrder.getId(),
+            savedOrder.getUserId(),
+            savedOrder.getStatus(),
+            mapToOrderItemDTOs(savedOrder.getItems()),
+            savedOrder.getTotalAmount(),
+            savedOrder.getCreatedAt()
+        );
+
+        rabbitTemplate.convertAndSend(exchangeName, 
+                                      routingKey, 
+                                      event);
         
         return Optional.of(mapToOrderResponse(savedOrder));
     }
