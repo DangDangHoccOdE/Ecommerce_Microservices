@@ -50,21 +50,22 @@ management:
   endpoint:
     prometheus:
       enabled: true
-    
+    health:
+      show-details: always
+
   metrics:
     export:
       prometheus:
         enabled: true
-  
+
   tracing:
     sampling:
       probability: 1.0
+
   zipkin:
     tracing:
       endpoint: http://localhost:9411/api/v2/spans
-  endpoint:
-    health:
-      show-details: always
+
   health:
     circuitbreakers:
       enabled: true
@@ -108,3 +109,9 @@ resilience4j:
       retryBreaker:
         maxAttempts: 5
         waitDuration: 5s
+  ratelimiter:
+    instances:
+      rateBreaker:
+        limit-for-period: 2 # số lượng yêu cầu tối đa trong một khoảng thời gian
+        limit-refresh-period: 4s # khoảng thời gian để làm mới giới hạn
+        timeout-duration: 0 
