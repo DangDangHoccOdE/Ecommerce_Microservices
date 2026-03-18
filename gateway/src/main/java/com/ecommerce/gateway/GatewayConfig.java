@@ -14,14 +14,13 @@ import reactor.core.publisher.Mono;
 public class GatewayConfig {
     @Bean
     public RedisRateLimiter redisRateLimiter() {
-        return new RedisRateLimiter(1,1,1); // 1 request trên giây, 1 request được phép chờ, 1 request được phép burst
+        return new RedisRateLimiter(1, 1, 1); // 1 request trên giây, 1 request được phép chờ, 1 request được phép burst
     }
 
     @Bean
     public KeyResolver hostNameKeyResolver() {
         return exchange -> Mono.just(exchange.getRequest().getRemoteAddress().getHostName());
     }
-
 
     @Bean
     public RouteLocator customerRouteLocator(RouteLocatorBuilder builder) {
