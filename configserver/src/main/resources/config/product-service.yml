@@ -23,7 +23,7 @@ spring:
   application:
     name: product-service
   datasource:
-    url: jdbc:postgresql://localhost:5432/product
+    url: jdbc:postgresql://localhost:5433/product
     username: postgres
     password: postgres
   jpa:
@@ -52,7 +52,7 @@ management:
   endpoint:
     prometheus:
       enabled: true
-    
+
   metrics:
     export:
       prometheus:
@@ -74,6 +74,8 @@ eureka:
       defaultZone: http://localhost:8761/eureka/
     register-with-eureka: true
     fetch-registry: true
+  instance:
+    prefer-ip-address: true
 
 logging:
   level:
