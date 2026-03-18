@@ -6,8 +6,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
+// import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.stereotype.Service;
 
 import com.ecommerce.order.dtos.response.OrderCreatedEvent;
@@ -26,13 +27,15 @@ import lombok.RequiredArgsConstructor;
 public class OrderService {
     private final OrderRepository orderRepository;
     private final CartService cartService;
-    private final RabbitTemplate rabbitTemplate;
+    private final StreamBridge streamBridge;
 
-    @Value("${rabbitmq.routing.key}")
-    public String routingKey;
+    // private final RabbitTemplate rabbitTemplate;
 
-    @Value("${rabbitmq.exchange.name}")
-    public String exchangeName;
+    // @Value("${rabbitmq.routing.key}")
+    // public String routingKey;
+
+    // @Value("${rabbitmq.exchange.name}")
+    // public String exchangeName;
 
     public Optional<OrderResponse> createOrder(String userId) {
         List<CartItem> cartItems = cartService.getCart(userId);
@@ -49,15 +52,14 @@ public class OrderService {
         order.setUserId(userId);
         order.setStatus(OrderStatus.CONFIRMED);
         order.setTotalAmount(totalPrice);
-    
+
         List<OrderItem> orderItems = cartItems.stream()
                 .map(item -> new OrderItem(
-                    null,
-                    item.getProductId(),
-                    item.getQuantity(),
-                    item.getPrice(),
-                    order
-                ))
+                        null,
+                        item.getProductId(),
+                        item.getQuantity(),
+                        item.getPrice(),
+                        order))
                 .toList();
 
         order.setItems(orderItems);
@@ -68,18 +70,19 @@ public class OrderService {
 
         // Publish order created event to RabbitMQ
         OrderCreatedEvent event = new OrderCreatedEvent(
-            savedOrder.getId(),
-            savedOrder.getUserId(),
-            savedOrder.getStatus(),
-            mapToOrderItemDTOs(savedOrder.getItems()),
-            savedOrder.getTotalAmount(),
-            savedOrder.getCreatedAt()
-        );
+                savedOrder.getId(),
+                savedOrder.getUserId(),
+                savedOrder.getStatus(),
+                mapToOrderItemDTOs(savedOrder.getItems()),
+                savedOrder.getTotalAmount(),
+                savedOrder.getCreatedAt());
 
-        rabbitTemplate.convertAndSend(exchangeName, 
-                                      routingKey, 
-                                      event);
-        
+        // rabbitTemplate.convertAndSend(exchangeName,
+        // routingKey,
+        // event);
+
+        streamBridge.send("createOrder-out-0", event);
+
         return Optional.of(mapToOrderResponse(savedOrder));
     }
 
@@ -90,8 +93,8 @@ public class OrderService {
                         item.getProductId(),
                         item.getQuantity(),
                         item.getPrice(),
-                        item.getPrice().multiply(new BigDecimal(item.getQuantity()))
-                )).collect(Collectors.toList());
+                        item.getPrice().multiply(new BigDecimal(item.getQuantity()))))
+                .collect(Collectors.toList());
     }
 
     private OrderResponse mapToOrderResponse(Order order) {
@@ -105,10 +108,10 @@ public class OrderService {
                                 orderItem.getProductId(),
                                 orderItem.getQuantity(),
                                 orderItem.getPrice(),
-                                orderItem.getPrice().multiply(new BigDecimal(orderItem.getQuantity()))
-                        ))
+                                orderItem.getPrice()
+                                        .multiply(new BigDecimal(orderItem
+                                                .getQuantity()))))
                         .toList(),
-                order.getCreatedAt()
-        );
+                order.getCreatedAt());
     }
 }
