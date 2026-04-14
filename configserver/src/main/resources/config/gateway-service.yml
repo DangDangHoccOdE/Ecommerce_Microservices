@@ -73,3 +73,11 @@ server:
 #     root: INFO
 #     org.springframework.cloud.gateway.route.RouteDefinitionRouteLocator: INFO
 #     org.springframework.cloud.gateway: TRACE
+
+# Security
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://127.0.0.1:8444/realms/ecom-app

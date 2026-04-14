@@ -56,3 +56,14 @@ logging:
     rollingpolicy:
       max-file-size: 5MB
       max-history: 7 # 7 days of logs
+
+# Keycloak Admin Client Configuration
+keycloak:
+  admin:
+    username: user
+    password: user
+    client-id: admin-cli
+    server-url: http://127.0.0.1:8444
+    realm: ecom-app
+    client-uid-id: c859d80a-de1e-480f-ab2e-c6126e688a4c
+    # UID oauth2-pkce

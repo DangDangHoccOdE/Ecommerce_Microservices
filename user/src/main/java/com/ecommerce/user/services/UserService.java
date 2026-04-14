@@ -19,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+    private final KeyCloakAdminService keyCloakAdminService;
 
     public List<UserResponse> fetchAllUsers() {
         return userRepository.findAll()
@@ -27,7 +28,13 @@ public class UserService {
     }
 
     public void addUser(UserRequest userRequest) {
+        String token = keyCloakAdminService.getAdminAccessToken();
+        String keyCloakId = keyCloakAdminService.createUser(token, userRequest);
         User user = new User();
+        user.setKeycloakId(keyCloakId);
+
+        keyCloakAdminService.assignRealmRoleToUser(userRequest.getUsername(), "USER", keyCloakId);
+
         updateUserFromRequest(user, userRequest);
         userRepository.save(user);
     }
